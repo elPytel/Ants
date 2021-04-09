@@ -1,1 +1,3 @@
 # Ants
+
+Simulátor mraveniště.
