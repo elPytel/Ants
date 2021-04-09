@@ -12,6 +12,9 @@ class Ant:
 	_MAX_TTL = 1000		# time to live
 		
 	def __init__ (self, will = -1, eye = -1, ttl = -1):
+		self.moved = True
+		self.interest = None
+		self.feromon = None
 		if will == -1:
 			self.will = round(random.gauss(Ant._MAX_WILL/2, Ant._MAX_WILL/4))
 			if self.will < 0:
@@ -62,12 +65,10 @@ class Ant:
 		return newAnt
 		
 	
-	def move (self, area, place):
+	def move (self, area):
 		self.ttl -= 1
 		if self.ttl < 0:	# ant dead
 			return None
-			
-		assert place in AntHill.AntHill.places, "invalid place"
 		
 	def Print (self):
 		print("-- Ant --")
@@ -86,5 +87,9 @@ if __name__ == '__main__':
 		
 	print()
 	area = []
-	ants[0].move(area, "HOME")
+	ants[0].move(area)
+	
+"""
+assert place in AntHill.AntHill.places, "invalid place"
+"""
 # END
