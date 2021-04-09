@@ -2,10 +2,16 @@
 DEBUG = True
 
 class AntHill:
+	
+	places = ["HOME", "FOOD", "DIRT", "STONE", "VOID"]
+	
 	def __init__ (self, size = None):
 		self._Y
 		self._X
-		self.items = ["HOME", "FOOD", "DIRT", "STONE"]
 		
+		
+	# vrati sub matici
+	def getArea (self, coord, r):
+		pass
 		
 # END
