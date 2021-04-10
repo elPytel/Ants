@@ -1,5 +1,6 @@
 # By Pytel
 
+import copy
 import random
 import AntHill
 
@@ -79,7 +80,7 @@ class Ant:
 					print('_', end ='')
 			print()
 		"""
-		vectors = Ant._VECTORS
+		vectors = copy.deepcopy(Ant._VECTORS)
 		Y = self.eye
 		X = self.eye
 		
@@ -114,45 +115,34 @@ class Ant:
 				i += 1
 		
 		# vidim co hledam?
-		
-		# minimax
 		coord = None
-		maxFeromon = 0 
+		# minimax
+		# [coord, feromon]
+		coordInterest = []
+		coordFeromon = []
 		for y in range(len(area)):
 			for x in range(len(area[0])):
 				if y == Y and x == X or area[y][x].isType("VOID"):
 					continue
 				intezity = area[y][x].intezityOf(self.interest)
-				if intezity > maxFeromon:
-					maxFeromon = intezity
-					coord = [y, x]
-		print(coord)
-		if coord != None:
-			dy = coord[0] - Y
-			dx = coord[1] - X
-			vector = [dy, dx]
-			print(vector)
-			#input()
-			return vector
-			
-		coord = None
-		minFeromon = 10000
-		for y in range(len(area)):
-			for x in range(len(area[0])):
-				if y == Y and x == X or area[y][x].isType("VOID"):
-					continue
+				coordInterest.append([[y, x], intezity])
 				intezity = area[y][x].intezityOf(self.feromon)
-				if intezity < minFeromon:
-					minFeromon = intezity
+				coordFeromon.append([[y, x], intezity])
+				if area[y][x].isType(self.interest):
 					coord = [y, x]
-		print(coord)
+		
+		# nasel co hledal
 		if coord != None:
 			dy = coord[0] - Y
 			dx = coord[1] - X
 			vector = [dy, dx]
-			print(vector)
-			#input()
+			if DEBUG:
+				print(coord)
 			return vector	
+		
+		coordInterest.sort(key=lambda x: x[1], reverse=True)	# klesajici
+		coordFeromon.sort(key=lambda x: x[1])					# rostouci
+		
 		
 		# nic lepsiho nenalezeno
 		return random.choice(vectors)	
