@@ -67,9 +67,11 @@ class Ant:
 	
 	def move (self, area):
 		self.ttl -= 1
+		vector = [[-1,0],[-1,1],[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1]]
 		if self.ttl <= 0:	# ant dead
 			return None
-		
+			
+		return random.choice(vector)
 		
 	def Print (self):
 		print("-- Ant --")

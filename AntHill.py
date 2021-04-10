@@ -1,86 +1,15 @@
 # By Pytel
 
 from colr import color
+import time
 import Ants
+import Place
 
 DEBUG = True
 
-class Place:
-	
-	_BASE_INTENZITY = 100
-	_INTENZITY_DECAY = 2
-	
-	places = ["HOME", "FOOD", "DIRT", "STONE", "VOID"]
-	
-	def __init__ (self):
-		self.content = []	# [[type, amount], ...]
-		self.trace = []		# [[type, intenzity], ...]
-		self.ants = []
-		
-	def addIntezity(self, feromon):
-		for trace in self.trace:
-			if trace[0] == feromon:
-				trace[1] += Place._BASE_INTENZITY
-				return
-		self.trace.append([feromon, Place._BASE_INTENZITY])
-	
-	def lowerIntezity(self):
-		i = 0
-		while i < len(place.trace):
-			trace = self.trace[i]
-			typ, intenzity = trace
-			if intenzity < Place._INTENZITY_DECAY:
-				self.trace.remove(trace)
-			else:
-				intenzity -= Place._INTENZITY_DECAY
-				i += 1
-	
-	def getColor (self):
-		char = ' '
-		FR = 0; FG = 0; FB = 0
-		BG = 0; BG = 0; BB = 0
-		if len(self.ants) != 0:
-			char = 'A'
-			brightnes = 20
-			FR = brightnes*len(self.ants)
-			FG = brightnes*len(self.ants)
-			FB = brightnes*len(self.ants)
-		
-		for feromon in self.trace:
-			typ, intenzity = feromon
-			if typ == "HOME":
-				BR += amount/10
-			if typ == "FOOD":
-				BG += amount/10
-				
-		for content in self.content:
-			typ, amount = content
-			if typ == "FOOD":
-				char = 'F'
-				
-		# oriznuti barev na 255
-		if BR > 255:
-			BR = 255
-		if BG > 255:
-			BG = 255
-			
-		if FR > 255:
-			FR = 255
-		if FG > 255:
-			FG = 255
-		if FB > 255:
-			FB = 255
-			
-		# navratovy format
-		Fcolor = [FR,FG,FB]
-		Bcolor = [BR,BG,BB]
-		ret = [char, Fcolor, Bcolor]
-		return ret
-				
-
 class AntHill:
 	
-	places = Place.places
+	places = Place.Place.places
 	
 	def __init__ (self, size, home, amount, terarium = None):
 		self.Y, self.X = size
@@ -90,15 +19,18 @@ class AntHill:
 			self.board = terarium
 		self.homeCoords	= home		# [y,x]
 		y, x = self.homeCoords
+		self.board[y][x].content.append(["HOME", 1])
 		for i in range(amount):
-			self.board[y][x].ants.append(Ants.Ant())
+			ant = Ants.Ant()
+			ant.feromon = "HOME"
+			self.board[y][x].ants.append(ant)
 		
 	def makeTerarium (self):
 		terarium = []
 		for y in range(self.Y):
 			row = []
 			for x in range(self.X): 
-				row.append(Place())
+				row.append(Place.Place())
 			terarium.append(row)
 			
 		return terarium
@@ -125,7 +57,7 @@ class AntHill:
 				place = self.board[y][x]
 				i = 0
 				while i < len(place.ants):
-					ant = place.ants(i)
+					ant = place.ants[i]
 					if ant.moved:
 						i += 1
 					else:
@@ -140,7 +72,7 @@ class AntHill:
 						ant.moved = True
 						place.ants.remove(ant)
 						
-						place_n = self.board[yn][xn].place
+						place_n = self.board[yn][xn]
 						place_n.ants.append(ant)
 						place.addIntezity(ant.feromon)
 		
@@ -151,6 +83,7 @@ class AntHill:
 				self.board[y][x].lowerIntezity()
 			
 	def Print (self):
+		print("---Terarium---")
 		for row in self.board:
 			for place in row:
 				# [char, [R,G,B], [R,G,B]]
@@ -163,8 +96,23 @@ if __name__ == '__main__':
 	size = [10, 10]
 	# size, home, amount,
 	hill = AntHill(size, [5,5], amount)
+	hill.board[2][2].content.append(["FOOD", 100])
+	hill.Print()
+	for i in range(10):
+		time.sleep(1)
+		hill.prepareAnts2Move()
+		hill.moveAnts()
+		hill.evalDecay()
+		hill.Print()
+		
 """
  - Přepsat place na slovnik
+ 
+size = [15, 15]
+	# size, home, amount,
+	hill = AntHill(size, [10,10], amount)
+	hill.board[5][5].content.append(["FOOD", 100])
+	
 pip install colr
 """				
 # END
