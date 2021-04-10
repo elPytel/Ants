@@ -67,8 +67,9 @@ class Ant:
 	
 	def move (self, area):
 		self.ttl -= 1
-		if self.ttl < 0:	# ant dead
+		if self.ttl <= 0:	# ant dead
 			return None
+		
 		
 	def Print (self):
 		print("-- Ant --")
