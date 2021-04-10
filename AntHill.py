@@ -1,6 +1,7 @@
 # By Pytel
 
 from colr import color
+import copy
 import time
 import Ants
 import Place
@@ -22,7 +23,7 @@ class AntHill:
 		self.board[y][x].content.append(["HOME", 1])
 		for i in range(amount):
 			ant = Ants.Ant()
-			ant.feromon = "HOME"
+			#ant.feromon = "HOME"
 			self.board[y][x].ants.append(ant)
 		
 	def makeTerarium (self):
@@ -37,11 +38,26 @@ class AntHill:
 		
 	# vrati sub matici
 	def getArea (self, coord, r):
-		# TODO
-		pass
+		area = []
+		ys, xs = coord
+		for y in range(ys-r,ys+r+1):
+			row = []
+			for x in range(xs-r,xs+r+1):
+				if self.validCoord([y,x]):
+					row.append(copy.deepcopy(self.board[y][x]))
+				else:
+					place = Place.Place()
+					place.content.append(["VOID", 1])
+					row.append(place)
+			area.append(row)
+		return area
 		
 	def validCoord (self, coord):
-		# TODO
+		y, x = coord
+		if y < 0 or y >= self.Y:
+			return False
+		if x < 0 or x >= self.X:
+			return False
 		return True
 	
 	def prepareAnts2Move (self):
@@ -88,17 +104,17 @@ class AntHill:
 			for place in row:
 				# [char, [R,G,B], [R,G,B]]
 				char, Fc, Bc = place.getColor()	
-				print(color(char, fore=(Fc[0], Fc[1], Fc[2]), back=(Bc[0], Bc[1], Bc[2])), end =" ")
+				print(color(char, fore=(Fc[0], Fc[1], Fc[2]), back=(Bc[0], Bc[1], Bc[2])), end ="")
 			print()
 
 if __name__ == '__main__':
-	amount = 10
-	size = [10, 10]
+	amount = 1
+	size = [15, 15]
 	# size, home, amount,
-	hill = AntHill(size, [5,5], amount)
-	hill.board[2][2].content.append(["FOOD", 100])
+	hill = AntHill(size, [10,10], amount)
+	hill.board[6][6].content.append(["FOOD", 5])
 	hill.Print()
-	for i in range(10):
+	for i in range(50):
 		time.sleep(1)
 		hill.prepareAnts2Move()
 		hill.moveAnts()
@@ -108,11 +124,13 @@ if __name__ == '__main__':
 """
  - Přepsat place na slovnik
  
-size = [15, 15]
+	size = [10, 10]
 	# size, home, amount,
-	hill = AntHill(size, [10,10], amount)
-	hill.board[5][5].content.append(["FOOD", 100])
+	hill = AntHill(size, [5,5], amount)
+	hill.board[2][2].content.append(["FOOD", 100])
 	
+pass
+
 pip install colr
 """				
 # END

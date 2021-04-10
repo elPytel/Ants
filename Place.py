@@ -16,6 +16,32 @@ class Place:
 		self.trace = []		# [[type, intenzity], ...]
 		self.ants = []
 		
+	def isType (self, Typ):
+		for content in self.content:
+			typ, amount = content
+			if typ == Typ:
+				return True
+		return False
+		
+	def takeFood (self):
+		for content in self.content:
+			typ, amount = content
+			if typ == "FOOD":
+				amount -= 1
+				if amount == 0:
+					self.content.remove(content)
+					if DEBUG:
+						print("jídlo vyčerpáno.")
+				return True
+		return False
+		
+	def intezityOf (self, Feromon):
+		for feromon in self.trace:
+			typ, intenzity = feromon
+			if typ == Feromon:
+				return intenzity
+		return 0
+		
 	def addIntezity(self, feromon):
 		for trace in self.trace:
 			if trace[0] == feromon:
@@ -57,7 +83,7 @@ class Place:
 			typ, amount = content
 			if typ == "FOOD":
 				char = 'F'
-				brightnes = 20
+				brightnes = 25
 				FG = brightnes*amount
 			if typ == "HOME":
 				char = 'H'
