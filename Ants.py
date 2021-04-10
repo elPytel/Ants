@@ -118,16 +118,25 @@ class Ant:
 		coord = None
 		# minimax
 		# [coord, feromon]
-		coordInterest = []
-		coordFeromon = []
+		coordInterest = {}
+		coordFeromon = {}
 		for y in range(len(area)):
 			for x in range(len(area[0])):
 				if y == Y and x == X or area[y][x].isType("VOID"):
 					continue
+				# interest
 				intezity = area[y][x].intezityOf(self.interest)
-				coordInterest.append([[y, x], intezity])
+				if not intezity in coordInterest.keys():
+					coordInterest[intezity] = [[y, x]]
+				else:
+					coordInterest[intezity].append([y, x])
+				# feromon
 				intezity = area[y][x].intezityOf(self.feromon)
-				coordFeromon.append([[y, x], intezity])
+				if not intezity in coordFeromon.keys():
+					coordFeromon[intezity] = [[y, x]]
+				else:
+					coordFeromon[intezity].append([y, x])
+				# nasel co hledal
 				if area[y][x].isType(self.interest):
 					coord = [y, x]
 		
@@ -141,18 +150,18 @@ class Ant:
 			return vector	
 		
 		if DEBUG:
-			print("Interest:", self.interest, "coord:", coordInterest)
-			print("Feromon:", self.feromon, "coord:", coordFeromon)
+			print("Interest:", self.interest, "coord:", coordInterest.items())
+			print("Feromon:", self.feromon, "coord:", coordFeromon.items())
 			print(" --sort-- ")
 		# setridi pozice podle relevantnosti
-		coordInterest.sort(key=lambda x: x[1], reverse=True)	# klesajici
-		coordFeromon.sort(key=lambda x: x[1])					# rostouci
+		coordInterest = sorted(coordInterest.items(), key=lambda x: x[1], reverse=True)	# klesajici
+		coordFeromon = sorted(coordFeromon.items(), key=lambda x: x[1])	# rostouci
 		if DEBUG:
-			print("coordInterest:", coordInterest)
-			print("coordFeromon:", coordFeromon)
+			print("Interest:", self.interest, "coord:", coordInterest)
+			print("Feromon:", self.feromon, "coord:", coordFeromon)
 		
 		"""
-		if coordInterest == 0 and coordFeromon[-1][1] == 0: 
+		if coordInterest[0][1] == 0 and coordFeromon[-1][1] == 0: 
 			# nic lepsiho nenalezeno
 			return random.choice(vectors)
 		"""
