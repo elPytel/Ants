@@ -7,6 +7,7 @@ DEBUG = True
 
 class Ant:
 	
+	_VECTORS = [[-1,0],[-1,1],[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1]]
 	_MAX_WILL = 100		# 0 - 100%
 	_MAX_EYESHOT = 1	# r - "radius"
 	_MAX_TTL = 1000		# time to live
@@ -78,12 +79,11 @@ class Ant:
 					print('_', end ='')
 			print()
 		"""
-		
+		vectors = Ant._VECTORS
 		Y = self.eye
 		X = self.eye
 		
 		self.ttl -= 1
-		vectors = [[-1,0],[-1,1],[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1]]
 		if self.ttl <= 0:	# ant dead
 			return None
 		

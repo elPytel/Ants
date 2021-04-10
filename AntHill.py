@@ -10,21 +10,21 @@ DEBUG = True
 
 class AntHill:
 	
-	places = Place.Place.places
+	places = Place.Place._PLACES
 	
 	def __init__ (self, size, home, amount, terarium = None):
 		self.Y, self.X = size
 		if terarium == None:
-			self.board = self.makeTerarium()
+			self.terarium = self.makeTerarium()
 		else:
-			self.board = terarium
+			self.terarium = terarium
 		self.homeCoords	= home		# [y,x]
 		y, x = self.homeCoords
-		self.board[y][x].content.append(["HOME", 1])
+		self.terarium[y][x].content["HOME"] = 1
 		for i in range(amount):
 			ant = Ants.Ant()
 			#ant.feromon = "HOME"
-			self.board[y][x].ants.append(ant)
+			self.terarium[y][x].ants.append(ant)
 		
 	def makeTerarium (self):
 		terarium = []
@@ -44,10 +44,10 @@ class AntHill:
 			row = []
 			for x in range(xs-r,xs+r+1):
 				if self.validCoord([y,x]):
-					row.append(copy.deepcopy(self.board[y][x]))
+					row.append(copy.deepcopy(self.terarium[y][x]))
 				else:
 					place = Place.Place()
-					place.content.append(["VOID", 1])
+					place.content["VOID"] = 1
 					row.append(place)
 			area.append(row)
 		return area
@@ -63,14 +63,14 @@ class AntHill:
 	def prepareAnts2Move (self):
 		for y in range(self.Y):
 			for x in range(self.X):
-				place = self.board[y][x]
+				place = self.terarium[y][x]
 				for ant in place.ants:
 					ant.moved = False
 	
 	def moveAnts (self):
 		for y in range(self.Y):
 			for x in range(self.X):
-				place = self.board[y][x]
+				place = self.terarium[y][x]
 				i = 0
 				while i < len(place.ants):
 					ant = place.ants[i]
@@ -88,19 +88,19 @@ class AntHill:
 						ant.moved = True
 						place.ants.remove(ant)
 						
-						place_n = self.board[yn][xn]
+						place_n = self.terarium[yn][xn]
 						place_n.ants.append(ant)
-						place.addIntezity(ant.feromon)
+						place_n.addIntezity(ant.feromon)
 		
 	# vyhodnoti ubytek stop
 	def evalDecay (self):
 		for y in range(self.Y):
 			for x in range(self.X):
-				self.board[y][x].lowerIntezity()
+				self.terarium[y][x].lowerIntezity()
 			
 	def Print (self):
 		print("---Terarium---")
-		for row in self.board:
+		for row in self.terarium:
 			for place in row:
 				# [char, [R,G,B], [R,G,B]]
 				char, Fc, Bc = place.getColor()	
@@ -108,11 +108,11 @@ class AntHill:
 			print()
 
 if __name__ == '__main__':
-	amount = 1
+	amount = 20
 	size = [15, 15]
 	# size, home, amount,
 	hill = AntHill(size, [10,10], amount)
-	hill.board[6][6].content.append(["FOOD", 5])
+	hill.terarium[7][7].content["FOOD"] = 5
 	hill.Print()
 	for i in range(50):
 		time.sleep(1)
