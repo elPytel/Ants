@@ -90,7 +90,7 @@ class AntHill:
 						
 						place_n = self.terarium[yn][xn]
 						place_n.ants.append(ant)
-						place_n.addIntezity(ant.feromon)
+						place.addIntezity(ant.feromon)
 		
 	# vyhodnoti ubytek stop
 	def evalDecay (self):
@@ -108,14 +108,14 @@ class AntHill:
 			print()
 
 if __name__ == '__main__':
-	amount = 1
-	size = [15, 15]
+	amount = 100
+	size = [20, 60]
 	# size, home, amount,
-	hill = AntHill(size, [10,10], amount)
-	hill.terarium[7][7].content["FOOD"] = 10
+	hill = AntHill(size, [12,30], amount)
+	hill.terarium[7][6].content["FOOD"] = 10
 	hill.Print()
-	for i in range(50):
-		time.sleep(1)
+	for i in range(250):
+		time.sleep(0.5)
 		hill.prepareAnts2Move()
 		hill.moveAnts()
 		hill.evalDecay()

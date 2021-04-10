@@ -149,38 +149,42 @@ class Ant:
 				print(coord)
 			return vector	
 		
-		if DEBUG:
+		if DEBUG and 0:
 			print("Interest:", self.interest, "coord:", coordInterest.items())
 			print("Feromon:", self.feromon, "coord:", coordFeromon.items())
 			print(" --sort-- ")
 		# setridi pozice podle relevantnosti
-		coordInterest = sorted(coordInterest.items(), key=lambda x: x[1], reverse=True)	# klesajici
-		coordFeromon = sorted(coordFeromon.items(), key=lambda x: x[1])	# rostouci
-		if DEBUG:
+		coordInterest = sorted(coordInterest.items(), key=lambda x: x[0], reverse=True)	# klesajici
+		coordFeromon = sorted(coordFeromon.items(), key=lambda x: x[0])	# rostouci
+		if DEBUG and 0:
 			print("Interest:", self.interest, "coord:", coordInterest)
 			print("Feromon:", self.feromon, "coord:", coordFeromon)
 		
-		"""
-		if coordInterest[0][1] == 0 and coordFeromon[-1][1] == 0: 
+		
+		if coordInterest[0][0] == 0 and coordFeromon[-1][0] == 0: 
 			# nic lepsiho nenalezeno
 			return random.choice(vectors)
-		"""
 		
-		coords = []
+		coords = {}
 		for i in range(len(coordInterest)):
-			coordI, scoreI = coordInterest[i]
-			for j in range(len(coordFeromon)):
-				coordF, scoreF = coordFeromon[j]
-				if coordI == coordF:
-					coords.append([coordI, i+j])
-					break
+			scoreI, coordsI  = coordInterest[i]
+			for coordI in coordsI:
+				for j in range(len(coordFeromon)):
+					scoreF, coordsF = coordFeromon[j]
+					for coordF in coordsF:
+						if coordI == coordF:
+							if not i+j in coords.keys():
+								coords[i+j] = [coordI]
+							else:
+								coords[i+j].append(coordI)
+							break
 		
-		coords.sort(key=lambda x: x[1])
-		if DEBUG:
+		coords = sorted(coords.items(), key=lambda x: x[0])
+		if DEBUG and 0:
 			print("coords:", coords)
 		
 		if len(coords) > 0:
-			coord = coords[0][0]
+			coord = random.choice(coords[0][1])
 			dy = coord[0] - Y
 			dx = coord[1] - X
 			vector = [dy, dx]

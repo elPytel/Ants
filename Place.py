@@ -7,7 +7,7 @@ DEBUG = True
 class Place:
 	
 	_BASE_INTENZITY = 100
-	_INTENZITY_DECAY = 2
+	_INTENZITY_DECAY = 10
 	_PLACES = ["HOME", "FOOD", "DIRT", "STONE", "VOID"]
 	
 	def __init__ (self):
@@ -41,12 +41,15 @@ class Place:
 			#self.trace[feromon] += Place._BASE_INTENZITY
 		
 	def lowerIntezity(self):
+		toRemove = []
 		for feromon, intenzity in self.trace.items():
 			if intenzity < Place._INTENZITY_DECAY:
-				self.trace.pop(trace)
+				toRemove.append(feromon)
 			else:
 				intenzity -= Place._INTENZITY_DECAY
 			self.trace[feromon] = intenzity
+		for feromon in toRemove:
+			self.trace.pop(feromon)
 	
 	def getColor (self):
 		char = ' '
@@ -61,9 +64,9 @@ class Place:
 		
 		for feromon, intenzity in self.trace.items():
 			if feromon == "HOME":
-				BR += intenzity/1	#10
+				BR += intenzity/5	#10
 			if feromon == "FOOD":
-				BG += intenzity/1	#10
+				BG += intenzity/5	#10
 				
 		for typ, amount in self.content.items():
 			if typ == "FOOD":
