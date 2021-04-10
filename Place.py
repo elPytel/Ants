@@ -61,9 +61,9 @@ class Place:
 		
 		for feromon, intenzity in self.trace.items():
 			if feromon == "HOME":
-				BR += intenzity/10
+				BR += intenzity/1	#10
 			if feromon == "FOOD":
-				BG += intenzity/10
+				BG += intenzity/1	#10
 				
 		for typ, amount in self.content.items():
 			if typ == "FOOD":

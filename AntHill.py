@@ -108,11 +108,11 @@ class AntHill:
 			print()
 
 if __name__ == '__main__':
-	amount = 20
+	amount = 1
 	size = [15, 15]
 	# size, home, amount,
 	hill = AntHill(size, [10,10], amount)
-	hill.terarium[7][7].content["FOOD"] = 5
+	hill.terarium[7][7].content["FOOD"] = 10
 	hill.Print()
 	for i in range(50):
 		time.sleep(1)

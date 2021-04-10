@@ -140,9 +140,42 @@ class Ant:
 				print(coord)
 			return vector	
 		
+		if DEBUG:
+			print("Interest:", self.interest, "coord:", coordInterest)
+			print("Feromon:", self.feromon, "coord:", coordFeromon)
+			print(" --sort-- ")
+		# setridi pozice podle relevantnosti
 		coordInterest.sort(key=lambda x: x[1], reverse=True)	# klesajici
 		coordFeromon.sort(key=lambda x: x[1])					# rostouci
+		if DEBUG:
+			print("coordInterest:", coordInterest)
+			print("coordFeromon:", coordFeromon)
 		
+		"""
+		if coordInterest == 0 and coordFeromon[-1][1] == 0: 
+			# nic lepsiho nenalezeno
+			return random.choice(vectors)
+		"""
+		
+		coords = []
+		for i in range(len(coordInterest)):
+			coordI, scoreI = coordInterest[i]
+			for j in range(len(coordFeromon)):
+				coordF, scoreF = coordFeromon[j]
+				if coordI == coordF:
+					coords.append([coordI, i+j])
+					break
+		
+		coords.sort(key=lambda x: x[1])
+		if DEBUG:
+			print("coords:", coords)
+		
+		if len(coords) > 0:
+			coord = coords[0][0]
+			dy = coord[0] - Y
+			dx = coord[1] - X
+			vector = [dy, dx]
+			return vector
 		
 		# nic lepsiho nenalezeno
 		return random.choice(vectors)	
